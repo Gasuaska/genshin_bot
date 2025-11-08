@@ -74,7 +74,7 @@ def delete_reminder(reminder_type):
 def reminder_checker():
     while True:
         due = get_due_reminders()
-        for _, user_id, message, reminder_type in due:
+        for _, user_id, remind_at, message, reminder_type in due:
             bot.send_message(user_id, message)
             print(f'[{datetime.now().strftime("%H:%M:%S")}]'
                   f'Отправлено напоминание типа {reminder_type}')

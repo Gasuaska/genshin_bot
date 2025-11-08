@@ -2,7 +2,7 @@ import threading, time, sqlite3, os
 from datetime import datetime, timedelta
 from telebot import TeleBot, types
 
-bot = TeleBot(token=os.getenv(token))
+bot = TeleBot(token=os.getenv('TOKEN'))
 
 BUTTONS_CONFIG = {
     '/CrystalflyTrap': 7 * 24,

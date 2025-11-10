@@ -1,6 +1,10 @@
 import threading, time, sqlite3, os
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
 from telebot import TeleBot, types
+
+load_dotenv()
 
 bot = TeleBot(token=os.getenv('TOKEN'))
 
@@ -43,8 +47,8 @@ def add_reminder(user_id, remind_at, message, reminder_type):
     conn = sqlite3.connect('reminders.db')
     c = conn.cursor()
     c.execute(
-        'INSERT INTO reminders (user_id, remind_at, message, reminder_type) VALUES (?, ?, ?, ?)',
-        (user_id, remind_at.isoformat(), message, reminder_type))
+        'INSERT INTO reminders (user_id, message, remind_at, created_at, reminder_type) VALUES (?, ?, ?, ?, ?)',
+        (user_id, message, remind_at.isoformat(), datetime.now().isoformat(), reminder_type))
     conn.commit()
     conn.close()
 
@@ -152,9 +156,10 @@ def other_reminders(message):
     bot.send_message(chat_id, f'Будет готово {days} числа в {time_str}')
 
 
-@bot.message_handler(commands=['/80HoursTreasures',])
+@bot.message_handler(commands=['80HoursTreasures',])
 def treasure_reminder(message):
     chat_id = message.chat.id
+    delete_reminder(message.text)
     hours = BUTTONS_CONFIG['/80HoursTreasures']
     remind_at = datetime.now() + timedelta(hours=hours)
     early_reminder = remind_at - timedelta(minutes=10)

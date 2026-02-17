@@ -1,8 +1,10 @@
 import threading, time, sqlite3
 from datetime import datetime, timedelta
+import os
 from telebot import TeleBot, types
 
-bot = TeleBot(token='8249866818:AAELV9aGqt_gMgDc5juR7ezI-Fb0z7SV97M')
+bot = TeleBot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
+
 
 BUTTONS_CONFIG = {
     '/CrystalflyTrap': 7 * 24,
@@ -74,7 +76,7 @@ def delete_reminder(reminder_type):
 def reminder_checker():
     while True:
         due = get_due_reminders()
-        for _, user_id, message, reminder_type in due:
+        for _, user_id, remind_at, message, reminder_type in due:
             bot.send_message(user_id, message)
             print(f'[{datetime.now().strftime("%H:%M:%S")}]'
                   f'Отправлено напоминание типа {reminder_type}')
